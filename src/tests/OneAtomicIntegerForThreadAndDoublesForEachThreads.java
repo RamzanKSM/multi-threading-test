@@ -8,20 +8,19 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class OneAtomicIntegerFroThreadAndDoublesForEachThreads extends AbstractMultiThreadingTest {
+public class OneAtomicIntegerForThreadAndDoublesForEachThreads extends AbstractMultiThreadingTest {
 
     public static void main(String[] args) {
-
         AtomicInteger[] atomicIntegers = CommonUtils.getFullAtomicIntegerArray(1);
         Double[] doubles = CommonUtils.getFullDoubleArray(THREADS_COUNT);
 
-        List<Callable<Map<String, Map<String, Number>>>> tasks = CommonUtils.getTasks(THREADS_COUNT, doubles, TARGET, atomicIntegers);
+        List<Callable<Map<String, Map<String, Number>>>> tasks = CommonUtils.getTasks(doubles, atomicIntegers);
 
-        Map<String, Number> finalResult = CommonUtils.getResultOfInvokes(EXECUTOR, tasks, QUANTITY_EXECUTIONS);
+        Map<String, Number> finalResult = CommonUtils.getResultOfInvokes(EXECUTOR, tasks);
 
         EXECUTOR.shutdown();
 
-        CommonUtils.soutAverageTime(finalResult, QUANTITY_EXECUTIONS);
+        CommonUtils.soutAverageTime(finalResult);
     }
 
 }

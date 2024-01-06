@@ -16,38 +16,40 @@ public class CommonUtils {
     private static final String TOTAL_TIME_KEY = "Total time";
     private static final String ATOMIC_INTEGER_KEY = "Atomic integer";
     private static final String DOUBLE_KEY = "Double";
+    private static final int threadsCount = AbstractMultiThreadingTest.THREADS_COUNT;
+    private static final int target = AbstractMultiThreadingTest.TARGET;
+    private static final int QUANTITY_EXECUTIONS = AbstractMultiThreadingTest.QUANTITY_EXECUTIONS;
 
-    public static void soutAverageTime(Map<String, Number> results, int quantityExecutions) {
+    public static void soutAverageTime(Map<String, Number> results) {
         for (String key : results.keySet()) {
-            System.out.println(key + " average time [" + results.get(key).doubleValue() / quantityExecutions + "]");
+            System.out.println(key + " average time [" + results.get(key).doubleValue() / QUANTITY_EXECUTIONS + "]");
         }
     }
 
-    public static List<Callable<Map<String, Map<String, Number>>>> getTasks(int threadsCount, int target, AtomicInteger... atomicIntegers) {
-        return getTasks(threadsCount, null, target, atomicIntegers);
+    public static List<Callable<Map<String, Map<String, Number>>>> getTasks(AtomicInteger... atomicIntegers) {
+        return getTasks(null, atomicIntegers);
     }
-    public static List<Callable<Map<String, Map<String, Number>>>> getTasks(int threadsCount, Double[] doubles, int target, AtomicInteger... atomicIntegers) {
-
+    public static List<Callable<Map<String, Map<String, Number>>>> getTasks(Double[] doubles, AtomicInteger... atomicIntegers) {
         List<Callable<Map<String, Map<String, Number>>>> tasks = new ArrayList<>();
 
         for (int counter = 0; counter < threadsCount; counter++) {
 
             AtomicInteger atomicInteger = getAtomicIntegerFromArray(atomicIntegers, counter);
 
-            Callable<Map<String, Map<String, Number>>> task = getTask(atomicInteger, doubles, counter, target);
+            Callable<Map<String, Map<String, Number>>> task = getTask(atomicInteger, doubles, counter);
             tasks.add(task);
         }
         return tasks;
     }
 
     private static AtomicInteger getAtomicIntegerFromArray(AtomicInteger[] atomicIntegers, int counter) {
-        if (atomicIntegers.length != 1) {
+        if (atomicIntegers.length > 1) {
             return atomicIntegers[counter];
         } else {
             return atomicIntegers[0];
         }
     }
-    private static Callable<Map<String, Map<String, Number>>> getTask(AtomicInteger atomicInteger, Double[] doubles, int counter, int target) {
+    private static Callable<Map<String, Map<String, Number>>> getTask(AtomicInteger atomicInteger, Double[] doubles, int counter) {
         if (doubles != null) {
             return () -> {
                 double dbl = doubles[counter];
@@ -99,9 +101,9 @@ public class CommonUtils {
             };
         }
     }
-    public static Map<String, Number> getResultOfInvokes(ExecutorService executor, List<Callable<Map<String, Map<String, Number>>>> tasks, int quantityExecution) {
+    public static Map<String, Number> getResultOfInvokes(ExecutorService executor, List<Callable<Map<String, Map<String, Number>>>> tasks) {
         Map<String, Number> resultOfAllExecutions = new HashMap<>();
-        for (int i = 0; i < quantityExecution; i++) {
+        for (int i = 0; i < QUANTITY_EXECUTIONS; i++) {
             try {
                 soutTestsNumber(i);
                 List<Future<Map<String, Map<String, Number>>>> tasksResult = executor.invokeAll(tasks);
@@ -150,7 +152,9 @@ public class CommonUtils {
     }
     public static AtomicInteger[] getFullAtomicIntegerArray(int length) {
         AtomicInteger[] result = new AtomicInteger[length];
-        Arrays.fill(result, new AtomicInteger(0));
+        for (int i = 0; i < length; i++) {
+            result[i] = new AtomicInteger(0);
+        }
         return result;
     }
     public static Double[] getFullDoubleArray(int length) {
