@@ -1,3 +1,8 @@
+package tests;
+
+import common.AbstractMultiThreadingTest;
+import common.CommonUtils;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -7,10 +12,10 @@ public class OneAtomicIntegerFroThreadAndDoublesForEachThreads extends AbstractM
 
     public static void main(String[] args) {
 
-        AtomicInteger atomicInteger = new AtomicInteger(0);
+        AtomicInteger[] atomicIntegers = CommonUtils.getFullAtomicIntegerArray(1);
         Double[] doubles = CommonUtils.getFullDoubleArray(THREADS_COUNT);
 
-        List<Callable<Map<String, Map<String, Number>>>> tasks = CommonUtils.getTasks(THREADS_COUNT, doubles, TARGET, atomicInteger);
+        List<Callable<Map<String, Map<String, Number>>>> tasks = CommonUtils.getTasks(THREADS_COUNT, doubles, TARGET, atomicIntegers);
 
         Map<String, Number> finalResult = CommonUtils.getResultOfInvokes(EXECUTOR, tasks, QUANTITY_EXECUTIONS);
 

@@ -1,3 +1,5 @@
+package common;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,6 +23,9 @@ public class CommonUtils {
         }
     }
 
+    public static List<Callable<Map<String, Map<String, Number>>>> getTasks(int threadsCount, int target, AtomicInteger... atomicIntegers) {
+        return getTasks(threadsCount, null, target, atomicIntegers);
+    }
     public static List<Callable<Map<String, Map<String, Number>>>> getTasks(int threadsCount, Double[] doubles, int target, AtomicInteger... atomicIntegers) {
 
         List<Callable<Map<String, Map<String, Number>>>> tasks = new ArrayList<>();
@@ -65,7 +70,7 @@ public class CommonUtils {
                 String threadKey = getThreadKey(counter);
                 map.put(threadKey, data);
 
-                soutThreadExecutionResult(threadKey, invokeTime, atomicInteger, dbl);
+                soutThreadExecutionResult(threadKey, invokeTime, atomicInteger, dbl, counter);
 
                 return map;
             };
@@ -88,7 +93,7 @@ public class CommonUtils {
                 String threadKey = getThreadKey(counter);
                 map.put(threadKey, data);
 
-                soutThreadExecutionResult(threadKey, invokeTime, atomicInteger, null);
+                soutThreadExecutionResult(threadKey, invokeTime, atomicInteger, null, counter);
 
                 return map;
             };
@@ -121,8 +126,8 @@ public class CommonUtils {
         return String.format("Thread %s", threadNumber);
     }
 
-    private static void soutThreadExecutionResult(String threadKey, long invokeTime, AtomicInteger atomicInteger, Double dbl) {
-        String outInfo = String.format("%s, Execution Time [%s], Atomic Integer [%s]", threadKey, invokeTime, atomicInteger);
+    private static void soutThreadExecutionResult(String threadKey, long invokeTime, AtomicInteger atomicInteger, Double dbl, int counter) {
+        String outInfo = String.format("TEST %s \\n %s, Execution Time [%s], Atomic Integer [%s]", counter, threadKey, invokeTime, atomicInteger);
 
         if (dbl != null) {
             outInfo += String.format(", Double [%s]", dbl);
@@ -137,6 +142,11 @@ public class CommonUtils {
         } else {
             resultOfAllExecutions.put(threadKey, currentInvokeTime.longValue() + invokeTime.longValue());
         }
+    }
+    public static AtomicInteger[] getFullAtomicIntegerArray(int length) {
+        AtomicInteger[] result = new AtomicInteger[length];
+        Arrays.fill(result, new AtomicInteger(0));
+        return result;
     }
     public static Double[] getFullDoubleArray(int length) {
         Double[] result = new Double[length];
