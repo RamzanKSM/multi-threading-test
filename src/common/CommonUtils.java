@@ -70,7 +70,7 @@ public class CommonUtils {
                 String threadKey = getThreadKey(counter);
                 map.put(threadKey, data);
 
-                soutThreadExecutionResult(threadKey, invokeTime, atomicInteger, dbl, counter);
+                soutThreadExecutionResult(threadKey, invokeTime, atomicInteger, dbl);
 
                 return map;
             };
@@ -93,7 +93,7 @@ public class CommonUtils {
                 String threadKey = getThreadKey(counter);
                 map.put(threadKey, data);
 
-                soutThreadExecutionResult(threadKey, invokeTime, atomicInteger, null, counter);
+                soutThreadExecutionResult(threadKey, invokeTime, atomicInteger, null);
 
                 return map;
             };
@@ -103,6 +103,7 @@ public class CommonUtils {
         Map<String, Number> resultOfAllExecutions = new HashMap<>();
         for (int i = 0; i < quantityExecution; i++) {
             try {
+                soutTestsNumber(i);
                 List<Future<Map<String, Map<String, Number>>>> tasksResult = executor.invokeAll(tasks);
                 for (int j = 0; j < tasksResult.size(); j++) {
                     Number time = getTotalTimeExecutionResult(tasksResult, j);
@@ -126,8 +127,8 @@ public class CommonUtils {
         return String.format("Thread %s", threadNumber);
     }
 
-    private static void soutThreadExecutionResult(String threadKey, long invokeTime, AtomicInteger atomicInteger, Double dbl, int counter) {
-        String outInfo = String.format("TEST %s \\n %s, Execution Time [%s], Atomic Integer [%s]", counter, threadKey, invokeTime, atomicInteger);
+    private static void soutThreadExecutionResult(String threadKey, long invokeTime, AtomicInteger atomicInteger, Double dbl) {
+        String outInfo = String.format("%s, Execution Time [%s], Atomic Integer [%s]", threadKey, invokeTime, atomicInteger);
 
         if (dbl != null) {
             outInfo += String.format(", Double [%s]", dbl);
@@ -142,6 +143,10 @@ public class CommonUtils {
         } else {
             resultOfAllExecutions.put(threadKey, currentInvokeTime.longValue() + invokeTime.longValue());
         }
+    }
+
+    private static void soutTestsNumber(int counter) {
+        System.out.printf("TEST %s\n", counter);
     }
     public static AtomicInteger[] getFullAtomicIntegerArray(int length) {
         AtomicInteger[] result = new AtomicInteger[length];
