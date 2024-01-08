@@ -2,7 +2,9 @@ package common;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -10,6 +12,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class CommonUtils {
     private static final double INCREASE_DOUBLE = 0.6;
@@ -21,9 +24,18 @@ public class CommonUtils {
     private static final int QUANTITY_EXECUTIONS = AbstractMultiThreadingTest.QUANTITY_EXECUTIONS;
 
     public static void soutAverageTime(Map<String, Number> results) {
-        for (String key : results.keySet()) {
-            System.out.println(key + " average time [" + results.get(key).doubleValue() / QUANTITY_EXECUTIONS + "]");
-        }
+
+                Map<String, Number> sortedMap = results.entrySet()
+                        .stream()
+                        .sorted(Map.Entry.comparingByValue(Comparator.comparingDouble(Number::doubleValue)))
+                        .collect(Collectors.toMap(
+                                    Map.Entry::getKey,
+                                    Map.Entry::getValue,
+                                    (e1, e2) -> e1,
+                                    LinkedHashMap::new
+                                )
+                        );
+                sortedMap.forEach((key, value) -> System.out.printf("%s average time [%s]\n", key, value.doubleValue() / QUANTITY_EXECUTIONS));
     }
 
     public static List<Callable<Map<String, Map<String, Number>>>> getTasks(AtomicInteger... atomicIntegers) {

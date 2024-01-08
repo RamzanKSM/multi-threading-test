@@ -6,6 +6,7 @@
     <file url="file://$PROJECT_DIR$/src/common/CommonUtils.java" charset="US-ASCII" />
     <file url="file://$PROJECT_DIR$/src/common/CommonUtils.java" charset="US-ASCII" />
     <file url="file://$PROJECT_DIR$/src/tests.java" charset="US-ASCII" />
+    <file url="file://$PROJECT_DIR$/src/tests/AtomicIntegerAndDoublesForEachThreads.java" charset="US-ASCII" />
     <file url="file://$PROJECT_DIR$/src/tests/AtomicIntegersForEachThreads.java" charset="US-ASCII" />
     <file url="file://$PROJECT_DIR$/src/tests/OneAtomicIntegerForThreadAndDoublesForEachThreads.java" charset="US-ASCII" />
     <file url="file://$PROJECT_DIR$/src/tests/OneAtomicIntegerForThreadAndDoublesForEachThreads.java" charset="US-ASCII" />
