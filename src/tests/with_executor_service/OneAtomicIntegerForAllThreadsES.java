@@ -19,7 +19,7 @@ public class OneAtomicIntegerForAllThreadsES {
 
         List<CallableTask> tasks = getTasks(atomicIntegers);
 
-        Map<String, Number> finalResult = getResultOfInvokes(EXECUTOR, tasks);
+        Map<String, Long> finalResult = getResultOfInvokes(EXECUTOR, tasks);
 
         EXECUTOR.shutdown();
 

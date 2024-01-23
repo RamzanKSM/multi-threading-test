@@ -1,5 +1,7 @@
 package common;
 
+import common.data_structure.Result;
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -10,15 +12,15 @@ import java.util.stream.Collectors;
 import static common.MultiThreadingTestSettings.QUANTITY_EXECUTIONS;
 
 public class CommonUtils {
-    public static void soutAverageTime(Map<String, Number> results) {
+    public static void soutAverageTime(Map<String, Long> results) {
 
-                Map<String, Number> sortedMap = results.entrySet()
+                Map<String, Long> sortedMap = results.entrySet()
                         .stream()
-                        .sorted(Map.Entry.comparingByValue(Comparator.comparingDouble(Number::doubleValue)))
+                        .sorted(Map.Entry.comparingByValue(Comparator.comparingDouble(Number::longValue)))
                         .collect(Collectors.toMap(
                                     Map.Entry::getKey,
                                     Map.Entry::getValue,
-                                    (e1, e2) -> e1,
+                                    Long::sum,
                                     LinkedHashMap::new
                                 )
                         );
@@ -31,15 +33,11 @@ public class CommonUtils {
             return atomicIntegers[0];
         }
     }
-    public static String getThreadKey(int threadNumber) {
-        return String.format("Thread %s", threadNumber);
-    }
+    public static void soutThreadExecutionResult(Result result) {
+        String outInfo = String.format("%s, Execution Time [%s], Atomic Integer [%s]", result.threadName(), result.invokeTime(), result.atomicIntegerValue());
 
-    public static void soutThreadExecutionResult(String threadKey, long invokeTime, AtomicInteger atomicInteger, Double dbl) {
-        String outInfo = String.format("%s, Execution Time [%s], Atomic Integer [%s]", threadKey, invokeTime, atomicInteger);
-
-        if (dbl != null) {
-            outInfo += String.format(", Double [%s]", dbl);
+        if (result.doubleValue() != 0) {
+            outInfo += String.format(", Double [%s]", result.doubleValue());
         }
 
         System.out.println(outInfo);
