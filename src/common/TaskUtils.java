@@ -32,22 +32,9 @@ public class TaskUtils {
         }
         return tasks;
     }
-    public static List<RunnableFuture<Result>> getFuturesFromCallables(List<CallableTask> tasks) {
-        List<RunnableFuture<Result>> futures = new ArrayList<>(tasks.size());
-        for (CallableTask task : tasks) {
-            futures.add(new FutureTask<>(task.task()));
-        }
-        return futures;
-    }
-
-    public static List<Thread> getThreadsList(List<RunnableFuture<Result>> tasks) {
-        List<Thread> threads = new ArrayList<>(tasks.size());
-        for (RunnableFuture<Result> task : tasks) {
-            threads.add(new Thread(task));
-        }
-        return threads;
-    }
-    public static void startAllThreads(List<Thread> threads) {
+    public static List<RunnableFuture<Result>> startAllThreads(List<CallableTask> tasks) {
+        List<RunnableFuture<Result>> futures = getFuturesFromCallables(tasks);
+        List<Thread> threads = getThreadsList(futures);
         for (Thread thread : threads) {
             thread.start();
         }
@@ -58,6 +45,22 @@ public class TaskUtils {
                 Thread.currentThread().interrupt();
             }
         }
+        return futures;
+    }
+
+    private static List<RunnableFuture<Result>> getFuturesFromCallables(List<CallableTask> tasks) {
+        List<RunnableFuture<Result>> futures = new ArrayList<>(tasks.size());
+        for (CallableTask task : tasks) {
+            futures.add(new FutureTask<>(task.task()));
+        }
+        return futures;
+    }
+    private static List<Thread> getThreadsList(List<RunnableFuture<Result>> tasks) {
+        List<Thread> threads = new ArrayList<>(tasks.size());
+        for (int i = 0; i < tasks.size(); i++) {
+            threads.add(new Thread(tasks.get(i), "Thread-" + i));
+        }
+        return threads;
     }
     private static CallableTask getTask(AtomicInteger atomicInteger, Double[] doubles, int counter) {
         if (doubles != null && doubles.length > 0) {

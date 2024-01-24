@@ -14,17 +14,17 @@ import static common.MultiThreadingTestSettings.QUANTITY_EXECUTIONS;
 public class CommonUtils {
     public static void soutAverageTime(Map<String, Long> results) {
 
-                Map<String, Long> sortedMap = results.entrySet()
-                        .stream()
-                        .sorted(Map.Entry.comparingByValue(Comparator.comparingDouble(Number::longValue)))
-                        .collect(Collectors.toMap(
-                                    Map.Entry::getKey,
-                                    Map.Entry::getValue,
-                                    Long::sum,
-                                    LinkedHashMap::new
-                                )
-                        );
-                sortedMap.forEach((key, value) -> System.out.printf("%s average time [%s]\n", key, value.doubleValue() / QUANTITY_EXECUTIONS));
+        Map<String, Long> sortedMap = results.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.comparingDouble(Number::longValue)))
+                .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            Map.Entry::getValue,
+                            Long::sum,
+                            LinkedHashMap::new
+                        )
+                );
+        sortedMap.forEach((key, value) -> System.out.printf("%s average time [%s]\n", key, value.doubleValue() / QUANTITY_EXECUTIONS));
     }
     public static AtomicInteger getAtomicIntegerFromArray(AtomicInteger[] atomicIntegers, int counter) {
         if (atomicIntegers.length > 1) {
