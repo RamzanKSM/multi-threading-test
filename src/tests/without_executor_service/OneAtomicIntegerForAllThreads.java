@@ -13,9 +13,7 @@ import static common.TaskUtils.getTasks;
 
 public class OneAtomicIntegerForAllThreads {
     public static void main(String[] args) {
-
         AtomicInteger[] atomicIntegers = getFullAtomicIntegerArray(1);
-
         List<CallableTask> tasks = getTasks(atomicIntegers);
 
         Map<String, Long> finalResult = getResultOfInvokes(tasks);

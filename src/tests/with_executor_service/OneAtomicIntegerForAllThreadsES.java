@@ -12,13 +12,9 @@ import static common.ResultUtils.getResultOfInvokes;
 import static common.TaskUtils.getTasks;
 
 public class OneAtomicIntegerForAllThreadsES {
-
     public static void main(String[] args) {
-
         AtomicInteger[] atomicIntegers = CommonUtils.getFullAtomicIntegerArray(1);
-
         List<CallableTask> tasks = getTasks(atomicIntegers);
-
         Map<String, Long> finalResult = getResultOfInvokes(EXECUTOR, tasks);
 
         EXECUTOR.shutdown();
