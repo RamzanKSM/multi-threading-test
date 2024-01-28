@@ -1,31 +1,20 @@
 package common;
 
 import common.data_structure.Result;
+import tests.with_executor_service.XA_D_ES;
+import tests.with_executor_service.XA_ES;
+import tests.with_executor_service.OA_ES;
+import tests.with_executor_service.OA_D_ES;
+import tests.without_executor_service.XA_D;
+import tests.without_executor_service.XA;
+import tests.without_executor_service.OA;
+import tests.without_executor_service.OA_D;
 
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-
-import static common.MultiThreadingTestSettings.QUANTITY_EXECUTIONS;
 
 public class CommonUtils {
-    public static void soutAverageTime(Map<String, Long> results) {
-
-        Map<String, Long> sortedMap = results.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.comparingDouble(Number::longValue)))
-                .collect(Collectors.toMap(
-                            Map.Entry::getKey,
-                            Map.Entry::getValue,
-                            Long::sum,
-                            LinkedHashMap::new
-                        )
-                );
-        sortedMap.forEach((key, value) -> System.out.printf("%s average time [%s]\n", key, value.doubleValue() / QUANTITY_EXECUTIONS));
-    }
     public static AtomicInteger getAtomicIntegerFromArray(AtomicInteger[] atomicIntegers, int counter) {
         if (atomicIntegers.length > 1) {
             return atomicIntegers[counter];
@@ -43,8 +32,21 @@ public class CommonUtils {
         System.out.println(outInfo);
     }
 
-    public static void soutTestsNumber(int counter) {
-        System.out.printf("TEST %s\n", counter);
+    public static void soutTestName(String className) {
+        System.out.printf("TEST: %s\n", className);
+    }
+
+    public static List<Testable> getAllTests() {
+        return List.of(
+                new OA(),
+                new OA_D(),
+                new XA(),
+                new XA_D(),
+                new OA_D_ES(),
+                new OA_ES(),
+                new XA_D_ES(),
+                new XA_ES()
+        );
     }
     public static AtomicInteger[] getFullAtomicIntegerArray(int length) {
         AtomicInteger[] result = new AtomicInteger[length];

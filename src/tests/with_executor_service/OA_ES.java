@@ -1,24 +1,30 @@
 package tests.with_executor_service;
 
 import common.CommonUtils;
+import common.Testable;
 import common.data_structure.CallableTask;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static common.MultiThreadingTestSettings.EXECUTOR;
-import static common.ResultUtils.getResultOfInvokes;
 import static common.TaskUtils.getTasks;
 
-public class OneAtomicIntegerForAllThreadsES {
+public class OA_ES implements Testable {
     public static void main(String[] args) {
+        var test = new OA_ES();
+        test.start();
+
+    }
+    @Override
+    public void start() {
         AtomicInteger[] atomicIntegers = CommonUtils.getFullAtomicIntegerArray(1);
         List<CallableTask> tasks = getTasks(atomicIntegers);
-        Map<String, Long> finalResult = getResultOfInvokes(EXECUTOR, tasks);
+        executeTasks(EXECUTOR, tasks);
+    }
 
-        EXECUTOR.shutdown();
-
-        CommonUtils.soutAverageTime(finalResult);
+    @Override
+    public String getClassName() {
+        return "OAES";
     }
 }

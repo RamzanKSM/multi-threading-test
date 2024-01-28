@@ -1,27 +1,31 @@
-package tests.with_executor_service;
+package tests.without_executor_service;
 
-import common.CommonUtils;
+import common.Testable;
 import common.data_structure.CallableTask;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static common.CommonUtils.getFullAtomicIntegerArray;
-import static common.MultiThreadingTestSettings.EXECUTOR;
 import static common.MultiThreadingTestSettings.THREADS_COUNT;
-import static common.ResultUtils.getResultOfInvokes;
 import static common.TaskUtils.getTasks;
 
-public class AtomicIntegersForEachThreadsES {
+public class XA implements Testable {
     public static void main(String[] args) {
+        var test = new XA();
+        test.start();
+    }
+
+    @Override
+    public void start() {
         AtomicInteger[] atomicIntegers = getFullAtomicIntegerArray(THREADS_COUNT);
         List<CallableTask> tasks = getTasks(atomicIntegers);
 
-        Map<String, Long> finalResult = getResultOfInvokes(EXECUTOR, tasks);
+        executeTasks(tasks);
+    }
 
-        EXECUTOR.shutdown();
-
-        CommonUtils.soutAverageTime(finalResult);
+    @Override
+    public String getClassName() {
+        return "XA";
     }
 }
