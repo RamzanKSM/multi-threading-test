@@ -12,7 +12,7 @@ import tests.without_executor_service.OA_D;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class CommonUtils {
     public static List<Testable> getAllTests() {
@@ -28,7 +28,7 @@ public class CommonUtils {
         );
     }
     public static void soutThreadExecutionResult(Result result) {
-        String outInfo = String.format("%s, Execution Time [%s], Atomic Integer [%s]", result.threadName, result.invokeTime, result.atomicIntegerValue);
+        String outInfo = String.format("%s, Execution Time [%s], Atomic Integer [%s]", result.threadName, result.invokeTime, result.atomicLongValue);
 
         if (result.doubleValue != 0) {
             outInfo += String.format(", Double [%s]", result.doubleValue);
@@ -41,17 +41,17 @@ public class CommonUtils {
         System.out.printf("TEST: %s\n", className);
     }
 
-    public static AtomicInteger getAtomicIntegerFromArray(AtomicInteger[] atomicIntegers, int counter) {
-        if (atomicIntegers.length > 1) {
-            return atomicIntegers[counter];
+    public static AtomicLong getAtomicLongFromArray(AtomicLong[] atomicLongs, int counter) {
+        if (atomicLongs.length > 1) {
+            return atomicLongs[counter];
         } else {
-            return atomicIntegers[0];
+            return atomicLongs[0];
         }
     }
-    public static AtomicInteger[] getFullAtomicIntegerArray(int length) {
-        AtomicInteger[] result = new AtomicInteger[length];
+    public static AtomicLong[] getFullAtomicLongArray(int length) {
+        AtomicLong[] result = new AtomicLong[length];
         for (int i = 0; i < length; i++) {
-            result[i] = new AtomicInteger(0);
+            result[i] = new AtomicLong(0);
         }
         return result;
     }

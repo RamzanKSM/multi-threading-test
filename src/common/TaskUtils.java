@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
-import static common.CommonUtils.getAtomicIntegerFromArray;
+import static common.CommonUtils.getAtomicLongFromArray;
 import static common.CommonUtils.soutThreadExecutionResult;
 import static common.MultiThreadingTestSettings.QUANTITY_EXECUTIONS;
 import static common.MultiThreadingTestSettings.TARGET;
@@ -18,17 +18,17 @@ import static common.MultiThreadingTestSettings.THREADS_COUNT;
 public class TaskUtils {
 
     private static final double INCREASE_DOUBLE = 0.6;
-    public static List<CallableTask> getTasks(AtomicInteger... atomicIntegers) {
-        return getTasks(null, atomicIntegers);
+    public static List<CallableTask> getTasks(AtomicLong... atomicLongs) {
+        return getTasks(null, atomicLongs);
     }
-    public static List<CallableTask> getTasks(Double[] doubles, AtomicInteger... atomicIntegers) {
+    public static List<CallableTask> getTasks(Double[] doubles, AtomicLong... atomicLongs) {
         List<CallableTask> tasks = new ArrayList<>();
 
         for (int counter = 0; counter < THREADS_COUNT; counter++) {
 
-            AtomicInteger atomicInteger = getAtomicIntegerFromArray(atomicIntegers, counter);
+            AtomicLong atomicLong = getAtomicLongFromArray(atomicLongs, counter);
 
-            CallableTask task = getTask(atomicInteger, doubles, counter);
+            CallableTask task = getTask(atomicLong, doubles, counter);
             tasks.add(task);
         }
         return tasks;
@@ -63,7 +63,7 @@ public class TaskUtils {
         }
         return threads;
     }
-    private static CallableTask getTask(AtomicInteger atomicInteger, Double[] doubles, int counter) {
+    private static CallableTask getTask(AtomicLong atomicLong, Double[] doubles, int counter) {
         if (doubles != null && doubles.length > 0) {
             return new CallableTask(
                     () -> {
@@ -76,14 +76,14 @@ public class TaskUtils {
                             long startTime = System.currentTimeMillis();
 
                             for (int j = 0; j < TARGET / THREADS_COUNT; j++) {
-                                atomicInteger.incrementAndGet();
+                                atomicLong.incrementAndGet();
                                 dbl += INCREASE_DOUBLE;
                             }
 
                             long invokeTime = System.currentTimeMillis() - startTime;
 
                             result.setOrAddInvokeTime(invokeTime);
-                            result.setOrAddAtomicIntegerValue(atomicInteger);
+                            result.setOrAddAtomicLongValue(atomicLong);
                             result.setOrAddDoubleValue(dbl);
 
                         }
@@ -101,12 +101,12 @@ public class TaskUtils {
                             long startTime = System.currentTimeMillis();
 
                             for (int j = 0; j < TARGET / THREADS_COUNT; j++) {
-                                atomicInteger.incrementAndGet();
+                                atomicLong.incrementAndGet();
                             }
 
                             long invokeTime = System.currentTimeMillis() - startTime;
                             result.setOrAddInvokeTime(invokeTime);
-                            result.setOrAddAtomicIntegerValue(atomicInteger);
+                            result.setOrAddAtomicLongValue(atomicLong);
                         }
                         soutThreadExecutionResult(result);
                         return result;

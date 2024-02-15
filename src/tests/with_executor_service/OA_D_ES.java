@@ -4,9 +4,9 @@ import common.Testable;
 import common.data_structure.CallableTask;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
-import static common.CommonUtils.getFullAtomicIntegerArray;
+import static common.CommonUtils.getFullAtomicLongArray;
 import static common.CommonUtils.getFullDoubleArray;
 import static common.MultiThreadingTestSettings.EXECUTOR;
 import static common.MultiThreadingTestSettings.THREADS_COUNT;
@@ -20,9 +20,9 @@ public class OA_D_ES implements Testable {
 
     @Override
     public void start() {
-        AtomicInteger[] atomicIntegers = getFullAtomicIntegerArray(1);
+        AtomicLong[] atomicLongs = getFullAtomicLongArray(1);
         Double[] doubles = getFullDoubleArray(THREADS_COUNT);
-        List<CallableTask> tasks = getTasks(doubles, atomicIntegers);
+        List<CallableTask> tasks = getTasks(doubles, atomicLongs);
 
         executeTasks(EXECUTOR, tasks);
     }

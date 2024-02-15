@@ -4,9 +4,9 @@ import common.Testable;
 import common.data_structure.CallableTask;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
-import static common.CommonUtils.getFullAtomicIntegerArray;
+import static common.CommonUtils.getFullAtomicLongArray;
 import static common.TaskUtils.getTasks;
 
 public class OA implements Testable {
@@ -17,8 +17,8 @@ public class OA implements Testable {
 
     @Override
     public void start() {
-        AtomicInteger[] atomicIntegers = getFullAtomicIntegerArray(1);
-        List<CallableTask> tasks = getTasks(atomicIntegers);
+        AtomicLong[] atomicLongs = getFullAtomicLongArray(1);
+        List<CallableTask> tasks = getTasks(atomicLongs);
 
         executeTasks(tasks);
     }

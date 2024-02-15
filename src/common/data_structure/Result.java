@@ -1,11 +1,11 @@
 package common.data_structure;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Result {
     public String threadName;
     public long invokeTime;
-    public int atomicIntegerValue;
+    public long atomicLongValue;
     public double doubleValue;
 
     public Result(String threadName) {
@@ -19,11 +19,11 @@ public class Result {
             this.invokeTime += invokeTime;
         }
     }
-    public void setOrAddAtomicIntegerValue(AtomicInteger atomicInteger) {
-        if (atomicIntegerValue == 0) {
-            this.atomicIntegerValue = atomicInteger.get();
+    public void setOrAddAtomicLongValue(AtomicLong atomicLong) {
+        if (atomicLongValue == 0) {
+            this.atomicLongValue = atomicLong.get();
         } else {
-            this.atomicIntegerValue += atomicInteger.get();
+            this.atomicLongValue += atomicLong.get();
         }
     }
     public void setOrAddDoubleValue(double doubleValue) {
