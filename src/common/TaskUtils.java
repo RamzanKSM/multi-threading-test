@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static common.CommonUtils.getAtomicIntegerFromArray;
 import static common.CommonUtils.soutThreadExecutionResult;
+import static common.MultiThreadingTestSettings.QUANTITY_EXECUTIONS;
 import static common.MultiThreadingTestSettings.TARGET;
 import static common.MultiThreadingTestSettings.THREADS_COUNT;
 
@@ -66,45 +67,48 @@ public class TaskUtils {
         if (doubles != null && doubles.length > 0) {
             return new CallableTask(
                     () -> {
-                        double dbl = doubles[counter];
+                        Result result = new Result(Thread.currentThread().getName());
 
-                        long startTime = System.currentTimeMillis();
+                        for (int i = 0; i < QUANTITY_EXECUTIONS; i++) {
 
-                        for (int j = 0; j < TARGET; j++) {
-                            atomicInteger.incrementAndGet();
-                            dbl += INCREASE_DOUBLE;
+                            double dbl = doubles[counter];
+
+                            long startTime = System.currentTimeMillis();
+
+                            for (int j = 0; j < TARGET / THREADS_COUNT; j++) {
+                                atomicInteger.incrementAndGet();
+                                dbl += INCREASE_DOUBLE;
+                            }
+
+                            long invokeTime = System.currentTimeMillis() - startTime;
+
+                            result.setOrAddInvokeTime(invokeTime);
+                            result.setOrAddAtomicIntegerValue(atomicInteger);
+                            result.setOrAddDoubleValue(dbl);
+
                         }
-
-                        long invokeTime = System.currentTimeMillis() - startTime;
-
-                        String threadName = Thread.currentThread().getName();
-                        Result result = new Result(threadName, invokeTime, atomicInteger.get(), dbl);
-
                         soutThreadExecutionResult(result);
-
                         return result;
                     }
             );
         } else {
             return new CallableTask(
                     () -> {
-                        long startTime = System.currentTimeMillis();
+                        Result result = new Result(Thread.currentThread().getName());
 
-                        for (int j = 0; j < TARGET; j++) {
-                            atomicInteger.incrementAndGet();
+                        for (int i = 0; i < QUANTITY_EXECUTIONS; i++) {
+
+                            long startTime = System.currentTimeMillis();
+
+                            for (int j = 0; j < TARGET / THREADS_COUNT; j++) {
+                                atomicInteger.incrementAndGet();
+                            }
+
+                            long invokeTime = System.currentTimeMillis() - startTime;
+                            result.setOrAddInvokeTime(invokeTime);
+                            result.setOrAddAtomicIntegerValue(atomicInteger);
                         }
-
-                        long invokeTime = System.currentTimeMillis() - startTime;
-
-                        String threadName = Thread.currentThread().getName();
-                        Result result = new Result(
-                                threadName,
-                                invokeTime,
-                                atomicInteger.get()
-                        );
-
                         soutThreadExecutionResult(result);
-
                         return result;
                     }
             );

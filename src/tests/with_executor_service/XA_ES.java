@@ -15,6 +15,7 @@ public class XA_ES implements Testable {
     public static void main(String[] args) {
         var test = new XA_ES();
         test.start();
+        EXECUTOR.shutdown();
     }
     @Override
     public void start() {

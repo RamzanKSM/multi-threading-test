@@ -29,5 +29,4 @@ public interface Testable {
                 throw new RuntimeException(e);
             }
     }
-
 }

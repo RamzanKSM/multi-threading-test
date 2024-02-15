@@ -14,7 +14,7 @@ public class OA_ES implements Testable {
     public static void main(String[] args) {
         var test = new OA_ES();
         test.start();
-
+        EXECUTOR.shutdown();
     }
     @Override
     public void start() {

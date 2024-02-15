@@ -17,6 +17,7 @@ public class XA_D_ES implements Testable {
     public static void main(String[] args) {
         var test = new XA_D_ES();
         test.start();
+        EXECUTOR.shutdown();
     }
 
 
