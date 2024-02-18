@@ -18,17 +18,17 @@ public class CommonUtils {
     public static List<Testable> getAllTests() {
         return List.of(
                 new OA(),
-                new OA_D(),
-                new XA(),
-                new XA_D(),
-                new OA_D_ES(),
                 new OA_ES(),
-                new XA_D_ES(),
-                new XA_ES()
+                new OA_D(),
+                new OA_D_ES(),
+                new XA(),
+                new XA_ES(),
+                new XA_D(),
+                new XA_D_ES()
         );
     }
     public static void soutThreadExecutionResult(Result result) {
-        String outInfo = String.format("%s, Execution Time [%s], Atomic Integer [%s]", result.threadName, result.invokeTime, result.atomicLongValue);
+        String outInfo = String.format("%s, Execution Time [%s], Atomic Long [%s] {%s}", result.threadName, result.invokeTime, result.atomicLongValue, result.atomicLongID);
 
         if (result.doubleValue != 0) {
             outInfo += String.format(", Double [%s]", result.doubleValue);

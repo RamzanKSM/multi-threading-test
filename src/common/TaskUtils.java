@@ -18,6 +18,7 @@ import static common.MultiThreadingTestSettings.THREADS_COUNT;
 public class TaskUtils {
 
     private static final double INCREASE_DOUBLE = 0.6;
+    private static final long TARGET_FOR_THREAD = TARGET / THREADS_COUNT;
     public static List<CallableTask> getTasks(AtomicLong... atomicLongs) {
         return getTasks(null, atomicLongs);
     }
@@ -67,7 +68,8 @@ public class TaskUtils {
         if (doubles != null && doubles.length > 0) {
             return new CallableTask(
                     () -> {
-                        Result result = new Result(Thread.currentThread().getName());
+                        String threadName = Thread.currentThread().getName();
+                        Result result = new Result(threadName);
 
                         for (int i = 0; i < QUANTITY_EXECUTIONS; i++) {
 
@@ -75,7 +77,7 @@ public class TaskUtils {
 
                             long startTime = System.currentTimeMillis();
 
-                            for (int j = 0; j < TARGET / THREADS_COUNT; j++) {
+                            for (int j = 0; j < TARGET_FOR_THREAD; j++) {
                                 atomicLong.incrementAndGet();
                                 dbl += INCREASE_DOUBLE;
                             }
@@ -85,7 +87,7 @@ public class TaskUtils {
                             result.setOrAddInvokeTime(invokeTime);
                             result.setOrAddAtomicLongValue(atomicLong);
                             result.setOrAddDoubleValue(dbl);
-
+                            result.setAtomicLongID(atomicLong);
                         }
                         soutThreadExecutionResult(result);
                         return result;
@@ -94,19 +96,21 @@ public class TaskUtils {
         } else {
             return new CallableTask(
                     () -> {
-                        Result result = new Result(Thread.currentThread().getName());
+                        String threadName = Thread.currentThread().getName();
+                        Result result = new Result(threadName);
 
                         for (int i = 0; i < QUANTITY_EXECUTIONS; i++) {
 
                             long startTime = System.currentTimeMillis();
 
-                            for (int j = 0; j < TARGET / THREADS_COUNT; j++) {
+                            for (int j = 0; j < TARGET_FOR_THREAD; j++) {
                                 atomicLong.incrementAndGet();
                             }
 
                             long invokeTime = System.currentTimeMillis() - startTime;
                             result.setOrAddInvokeTime(invokeTime);
                             result.setOrAddAtomicLongValue(atomicLong);
+                            result.setAtomicLongID(atomicLong);
                         }
                         soutThreadExecutionResult(result);
                         return result;

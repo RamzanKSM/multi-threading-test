@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class Result {
     public String threadName;
+    public int atomicLongID;
     public long invokeTime;
     public long atomicLongValue;
     public double doubleValue;
@@ -32,5 +33,9 @@ public class Result {
         } else {
             this.doubleValue = Double.sum(this.doubleValue, doubleValue);
         }
+    }
+
+    public void setAtomicLongID(AtomicLong atomicLong) {
+        this.atomicLongID = System.identityHashCode(atomicLong);
     }
 }

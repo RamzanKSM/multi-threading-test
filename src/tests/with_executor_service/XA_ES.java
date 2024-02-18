@@ -23,7 +23,6 @@ public class XA_ES implements Testable {
         List<CallableTask> tasks = getTasks(atomicLongs);
 
         executeTasks(EXECUTOR, tasks);
-        EXECUTOR.shutdown();
     }
 
     @Override
