@@ -1,5 +1,6 @@
 package common;
 
+import common.data_structure.AllTestResults;
 import common.data_structure.Result;
 import tests.with_executor_service.XA_D_ES;
 import tests.with_executor_service.XA_ES;
@@ -14,6 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static common.MultiThreadingTestSettings.SHOW_EACH_THREAD_RESULT;
+
 public class CommonUtils {
     public static List<Testable> getAllTests() {
         return List.of(
@@ -27,14 +30,28 @@ public class CommonUtils {
                 new XA_D_ES()
         );
     }
+
+    public static void soutAllThreadExecutionResult(AllTestResults allTestResults) {
+        long resultsInvokeTimeSum = allTestResults.threadResults.stream().mapToLong(result -> result.invokeTime).sum();
+        long averageTime = resultsInvokeTimeSum / allTestResults.threadResults.size();
+        String outInfo = String.format(
+                """
+                    
+                    %s,
+                    Total time [%s],
+                    Average time [%s]
+                    """, allTestResults.testName, allTestResults.totalTestExecutionTime, averageTime);
+        System.out.println(outInfo);
+    }
     public static void soutThreadExecutionResult(Result result) {
         String outInfo = String.format("%s, Execution Time [%s], Atomic Long [%s] {%s}", result.threadName, result.invokeTime, result.atomicLongValue, result.atomicLongID);
 
         if (result.doubleValue != 0) {
             outInfo += String.format(", Double [%s]", result.doubleValue);
         }
-
-        System.out.println(outInfo);
+        if (SHOW_EACH_THREAD_RESULT) {
+            System.out.println(outInfo);
+        }
     }
 
     public static void soutTestName(String className) {

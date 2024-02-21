@@ -1,10 +1,13 @@
 package common;
 
+import common.data_structure.AllTestResults;
 import common.data_structure.CallableTask;
 import common.data_structure.Result;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 import java.util.concurrent.atomic.AtomicLong;
@@ -16,6 +19,7 @@ import static common.MultiThreadingTestSettings.TARGET;
 import static common.MultiThreadingTestSettings.THREADS_COUNT;
 
 public class TaskUtils {
+    private static final Object lock = new Object();
 
     private static final double INCREASE_DOUBLE = 0.6;
     private static final long TARGET_FOR_THREAD = TARGET / THREADS_COUNT;
@@ -34,20 +38,42 @@ public class TaskUtils {
         }
         return tasks;
     }
-    public static List<RunnableFuture<Result>> startAllThreads(List<CallableTask> tasks) {
+    public static long getTimeExecutionByService(List<Future<Result>> futures) {
+        try {
+            boolean isDone;
+            do {
+                isDone = futures.get(0).isDone();
+                synchronized (lock) {
+                    lock.wait(5);
+                }
+            } while (!isDone);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return System.currentTimeMillis();
+    }
+    public static AllTestResults startAllThreads(List<CallableTask> tasks) {
+        AllTestResults allTestResults = new AllTestResults();
+
         List<RunnableFuture<Result>> futures = getFuturesFromCallables(tasks);
         List<Thread> threads = getThreadsList(futures);
-        for (Thread thread : threads) {
-            thread.start();
-        }
-        for (Thread thread : threads) {
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+
+        long startTime = System.currentTimeMillis();
+        try {
+            for (Thread thread : threads) {
+                thread.start();
             }
+            for (Thread thread : threads) {
+                thread.join();
+            }
+            long executionTime = System.currentTimeMillis() - startTime;
+
+            allTestResults.threadResults = getResultsFromFuture(futures);
+            allTestResults.totalTestExecutionTime = executionTime;
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
         }
-        return futures;
+        return allTestResults;
     }
 
     private static List<RunnableFuture<Result>> getFuturesFromCallables(List<CallableTask> tasks) {
@@ -63,6 +89,16 @@ public class TaskUtils {
             threads.add(new Thread(tasks.get(i), "Thread-" + i));
         }
         return threads;
+    }
+    public static List<Result> getResultsFromFuture(List<? extends Future<Result>> futures)
+            throws ExecutionException, InterruptedException
+    {
+        List<Result> resultList = new ArrayList<>(futures.size());
+        for (Future<Result> future : futures) {
+            Result result = future.get();
+            resultList.add(result);
+        }
+        return resultList;
     }
     private static CallableTask getTask(AtomicLong atomicLong, Double[] doubles, int counter) {
         if (doubles != null && doubles.length > 0) {
