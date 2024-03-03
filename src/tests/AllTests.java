@@ -3,18 +3,22 @@ package tests;
 import common.MultiThreadingTestSettings;
 import common.Testable;
 
-import java.util.List;
-
 import static common.CommonUtils.getAllTests;
+import static common.CommonUtils.logCloseTestBlockInFile;
+import static common.CommonUtils.logThreadCount;
+import static common.MultiThreadingTestSettings.DELETE_OLD_FILE;
+import static common.MultiThreadingTestSettings.RESULT_FILE;
 
 public class AllTests {
     public static void main(String[] args) {
-        long totalTime = System.nanoTime();
-        List<Testable> tests = getAllTests();
-        for(Testable test : tests) {
+        if (DELETE_OLD_FILE) {
+            RESULT_FILE.delete();
+        }
+        logThreadCount();
+        for(Testable test : getAllTests()) {
             test.start();
         }
         MultiThreadingTestSettings.EXECUTOR.shutdown();
-        System.out.println(System.nanoTime() - totalTime);
+        logCloseTestBlockInFile();
     }
 }
