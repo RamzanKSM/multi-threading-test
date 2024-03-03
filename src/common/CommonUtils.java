@@ -11,6 +11,8 @@ import tests.without_executor_service.XA;
 import tests.without_executor_service.OA;
 import tests.without_executor_service.OA_D;
 
+import javax.swing.filechooser.FileSystemView;
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -32,24 +34,23 @@ public class CommonUtils {
     }
 
     public static void soutAllThreadExecutionResult(AllTestResults allTestResults) {
+        File homeDirectory = FileSystemView.getFileSystemView().getHomeDirectory();
         long resultsInvokeTimeSum = allTestResults.threadResults.stream().mapToLong(result -> result.invokeTime).sum();
         long averageTime = resultsInvokeTimeSum / allTestResults.threadResults.size();
         String outInfo = String.format(
                 """
-                    
-                    %s,
                     Total time [%s],
                     Average time [%s]
-                    """, allTestResults.testName, allTestResults.totalTestExecutionTime, averageTime);
-        System.out.println(outInfo);
+                    """, allTestResults.totalTestExecutionTime, averageTime);
+        System.out.println(outInfo + homeDirectory);
     }
     public static void soutThreadExecutionResult(Result result) {
-        String outInfo = String.format("%s, Execution Time [%s], Atomic Long [%s] {%s}", result.threadName, result.invokeTime, result.atomicLongValue, result.atomicLongID);
-
-        if (result.doubleValue != 0) {
-            outInfo += String.format(", Double [%s]", result.doubleValue);
-        }
         if (SHOW_EACH_THREAD_RESULT) {
+            String outInfo = String.format("%s, Execution Time [%s], Atomic Long [%s] {%s}", result.threadName, result.invokeTime, result.atomicLongValue, result.atomicLongID);
+
+            if (result.doubleValue != 0) {
+                outInfo += String.format(", Double [%s]", result.doubleValue);
+            }
             System.out.println(outInfo);
         }
     }
