@@ -2,15 +2,10 @@ package common;
 
 import common.data_structure.AllTestResults;
 import common.data_structure.Result;
-import tests.with_executor_service.OA_D_ES;
-import tests.with_executor_service.OA_ES;
-import tests.with_executor_service.XA_D_ES;
-import tests.with_executor_service.XA_ES;
-import tests.without_executor_service.OA;
-import tests.without_executor_service.OA_D;
-import tests.without_executor_service.XA;
-import tests.without_executor_service.XA_D;
-
+import tests.OA_D_ES;
+import tests.OA_ES;
+import tests.XA_D_ES;
+import tests.XA_ES;
 import java.io.FileWriter;
 import java.util.Arrays;
 import java.util.List;
@@ -23,13 +18,9 @@ import static common.MultiThreadingTestSettings.THREADS_COUNT;
 public class CommonUtils {
     public static List<Testable> getAllTests() {
         return List.of(
-                new OA(),
                 new OA_ES(),
-                new OA_D(),
                 new OA_D_ES(),
-                new XA(),
                 new XA_ES(),
-                new XA_D(),
                 new XA_D_ES()
         );
     }

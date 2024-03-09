@@ -1,4 +1,4 @@
-package tests.without_executor_service;
+package tests;
 
 import common.Testable;
 import common.data_structure.CallableTask;
@@ -7,24 +7,26 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static common.CommonUtils.getFullAtomicLongArray;
+import static common.MultiThreadingTestSettings.EXECUTOR;
+import static common.MultiThreadingTestSettings.THREADS_COUNT;
 import static common.TaskUtils.getTasks;
 
-public class OA implements Testable {
+public class XA_ES implements Testable {
     public static void main(String[] args) {
-        var test = new OA();
+        var test = new XA_ES();
         test.start();
+        EXECUTOR.shutdown();
     }
-
     @Override
     public void start() {
-        AtomicLong[] atomicLongs = getFullAtomicLongArray(1);
+        AtomicLong[] atomicLongs = getFullAtomicLongArray(THREADS_COUNT);
         List<CallableTask> tasks = getTasks(atomicLongs);
 
-        executeTasks(tasks);
+        executeTasks(EXECUTOR, tasks);
     }
 
     @Override
     public String getClassName() {
-        return "OA";
+        return "XAES";
     }
 }
